@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.crud.models.ResponseBase;
+import com.example.crud.exceptions.base.ResponseBase;
 import com.example.crud.utils.LocaleUtils;
 
 import lombok.Getter;

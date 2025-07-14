@@ -21,9 +21,4 @@ public class LocaleUtils {
 		}
 	}
 
-	public static Object getMessage(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

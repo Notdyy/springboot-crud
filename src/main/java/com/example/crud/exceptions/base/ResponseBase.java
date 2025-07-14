@@ -1,5 +1,7 @@
 package com.example.crud.exceptions.base;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -7,33 +9,51 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import com.example.crud.utils.ExceptionUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class ErrorMessage {
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ResponseBase implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+    
+    @JsonIgnore
 	public static final String ERROR_TEXT = "ERROR|พบข้อผิดพลาด|กรุณาติดต่อผู้ดูแลระบบ";
+    
+    @JsonProperty("message_code")
+    private String messageCode;
 
-	private String code;
-	private String summary;
-	private String detail;
-	private String cause;
+    @JsonProperty("message_summary")
+    private String messageSummary;
 
-	public ErrorMessage(final Exception e) {
+    @JsonProperty("message_description")
+    private String messageDesc;
+    
+    @JsonProperty("message_cause")
+    private String cause;
+    
+    public ResponseBase(final Exception e) {
 		this.errorMessage(e, null);
 	}
 
-	public ErrorMessage(final Exception e, final Locale locale) {
+	public ResponseBase(final Exception e, final Locale locale) {
 		this.errorMessage(e, locale);
 	}
-
+	
+	
 	private void errorMessage(final Exception e, Locale locale) {
 	    String text = ERROR_TEXT;
 	    String name = null;
@@ -46,7 +66,7 @@ public class ErrorMessage {
 	        final ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
 	        text = bundle.getString(name);
 	    } catch (final MissingResourceException mre) {
-	        ErrorMessage.log.error("Real exception is MissingResourceException:", e);
+	        log.error("Real exception is MissingResourceException:", e);
 	        text = text + " (" + name + ")";
 	    }
 
@@ -61,21 +81,21 @@ public class ErrorMessage {
 	private void init(final String text, final String cause, final Object... params) {
 	    final StringTokenizer stk = new StringTokenizer(text, "|");
 	    if (stk.hasMoreElements()) {
-	        this.code = (String) stk.nextElement();
+	        this.messageCode = (String) stk.nextElement();
 	    }
 	    if (stk.hasMoreElements()) {
-	        this.summary = (String) stk.nextElement();
+	        this.messageSummary = (String) stk.nextElement();
 	        if (params != null && params.length > 0) {
-	            this.summary = MessageFormat.format(this.summary, params);
+	            this.messageSummary = MessageFormat.format(this.messageSummary, params);
 	        }
 	    }
 	    if (stk.hasMoreElements()) {
-	        this.detail = (String) stk.nextElement();
+	        this.messageDesc = (String) stk.nextElement();
 	        if (params != null && params.length > 0) {
-	            this.detail = MessageFormat.format(this.detail, params);
+	            this.messageDesc = MessageFormat.format(this.messageDesc, params);
 	        }
 	    } else {
-	        this.detail = "";
+	        this.messageDesc = "";
 	    }
 	    this.cause = cause;
 	}
@@ -94,5 +114,4 @@ public class ErrorMessage {
 		}
 		return cause;
 	}
-
 }

@@ -6,14 +6,12 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductResponse extends ResponseBase implements Serializable{
+public class ProductResponse implements Serializable{
 
 	@Serial
 	private static final long serialVersionUID = 1L;
