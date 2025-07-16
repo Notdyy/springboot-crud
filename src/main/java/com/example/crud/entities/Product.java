@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,10 +30,10 @@ public class Product implements Serializable {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
 	private String id;
 
+	@Column(name = "product_name", nullable = false, length = 100)
 	private String productName;
-	private String price;
 	
-	@Version
-    private Long version;
+	@Column(name = "description", length = 255)
+	private String price;
 
 }
